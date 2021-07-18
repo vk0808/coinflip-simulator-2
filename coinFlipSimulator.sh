@@ -7,15 +7,21 @@ echo "Welcome to Coin Flip Simulator Program"
 MAX_PLAY=20
 KEY1="Singlet"
 KEY2="Doublet"
+KEY3="Triplet"
+
 
 singlet=(0 0)
 doublet=(0 0 0 0)
+triplet=(0 0 0 0 0 0 0 0)
+
 toss=0
 combSinlt=(H T)
 combDoblt=(HH HT TH TT)
+combTrplt=(HHH HHT HTH HTT THH THT TTH TTT)
 
 perSinlt=(0 0)
 perDoblt=(0 0 0 0)
+perTrplt=(0 0 0 0 0 0 0 0)
 
 
 # Declare a dictionary
@@ -28,6 +34,8 @@ do
 	#Generate Head/Tail
 	coinFlipSinglet=$(( $RANDOM %2 ))
 	coinFlipDoublet=$(( $RANDOM %4 ))
+	coinFlipTriplet=$(( $RANDOM %8 ))
+
 
 	#Check if it's H/T for Singlet
 	if [ $coinFlipSinglet -eq 0 ]; then
@@ -53,6 +61,35 @@ do
 		flip[$KEY2]="${flip[$KEY2]} TT"
 		(( doublet[3]++ ))
 	fi
+
+
+
+	#Check if it's HH/HT/TH/TT for Triplet
+        if [ $coinFlipTriplet -eq 0 ]; then
+                flip[$KEY3]="${flip[$KEY3]} HHH"
+                (( triplet[0]++ ))
+        elif [ $coinFlipTriplet -eq 1 ]; then
+                flip[$KEY3]="${flip[$KEY3]} HHT"
+                (( triplet[1]++ ))
+        elif [ $coinFlipTriplet -eq 2 ]; then
+                flip[$KEY3]="${flip[$KEY3]} HTH"
+                (( triplet[2]++ ))
+        elif [ $coinFlipTriplet -eq 3 ]; then
+                flip[$KEY3]="${flip[$KEY3]} HTT"
+                (( triplet[3]++ ))
+        elif [ $coinFlipTriplet -eq 4 ]; then
+                flip[$KEY3]="${flip[$KEY3]} THH"
+                (( triplet[4]++ ))
+        elif [ $coinFlipTriplet -eq 5 ]; then
+                flip[$KEY3]="${flip[$KEY3]} THT"
+                (( triplet[5]++ ))
+        elif [ $coinFlipTriplet -eq 6 ]; then
+                flip[$KEY3]="${flip[$KEY3]} TTH"
+                (( triplet[6]++ ))
+        else
+                flip[$KEY3]="${flip[$KEY3]} TTT"
+                (( triplet[7]++ ))
+        fi
 
 
 	(( toss++ ))
@@ -95,3 +132,5 @@ function display(){
 display "${singlet[*]}" "${flip[$KEY1]}" "${combSinlt[*]}" "${perSinlt[*]}"
 echo -e "\n"
 display "${doublet[*]}" "${flip[$KEY2]}" "${combDoblt[*]}" "${perDoblt[*]}"
+echo -e "\n"
+display "${triplet[*]}" "${flip[$KEY3]}" "${combTrplt[*]}" "${perTrplt[*]}"
