@@ -14,6 +14,10 @@ toss=0
 combSinlt=(H T)
 combDoblt=(HH HT TH TT)
 
+perSinlt=(0 0)
+perDoblt=(0 0 0 0)
+
+
 # Declare a dictionary
 declare -A flip
 
@@ -70,19 +74,24 @@ function display(){
 	declare -a count=($1)
 	local arr=("$2")
 	declare -a com=($3)
+	per=($4)
+
 
 	# Print Singlet combination stored in dictionary
 	echo "Combination: ${arr[*]}"
 
+
 	# Print percentages
 	for i in ${!count[*]}
 	do
-		echo -n "${com[$i]}-$(percent $count[$i])%  "
+		per[$i]=$(percent ${count[$i]})
+		echo -n "${com[$i]}-${per[$i]}%  "
 	done
 	echo ""
 }
 
 
 # Function call
-display "${singlet[*]}" "${flip[$KEY1]}" "${combSinlt[*]}"
-display "${doublet[*]}" "${flip[$KEY2]}" "${combDoblt[*]}"
+display "${singlet[*]}" "${flip[$KEY1]}" "${combSinlt[*]}" "${perSinlt[*]}"
+echo -e "\n"
+display "${doublet[*]}" "${flip[$KEY2]}" "${combDoblt[*]}" "${perDoblt[*]}"
