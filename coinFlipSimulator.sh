@@ -112,6 +112,8 @@ function display(){
 	local arr=("$2")
 	declare -a com=($3)
 	per=($4)
+	local max=0
+	local x=0
 
 
 	# Print Singlet combination stored in dictionary
@@ -125,7 +127,20 @@ function display(){
 		echo -n "${com[$i]}-${per[$i]}%  "
 	done
 	echo ""
+
+	for m in ${!per[*]}
+	do
+    		if [ ${per[$m]} -gt $max ]; then
+		        max=${per[m]}
+			x=$m
+    		fi
+	done
+
+
+	echo "Winning commbination is : ${com[$x]} with $max% probability"
+
 }
+
 
 
 # Function call
