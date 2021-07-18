@@ -2,15 +2,17 @@
 
 echo "Welcome to Coin Flip Simulator Program"
 
+
 # Variable
-HEAD=1
 MAX_PLAY=20
-KEY="Singlet"
+KEY1="Singlet"
+KEY2="Doublet"
 
-headCound=0
-tailCound=0
+singlet=(0 0)
+doublet=(0 0 0 0)
 toss=0
-
+combSinlt=(H T)
+combDoblt=(HH HT TH TT)
 
 # Declare a dictionary
 declare -A flip
@@ -20,16 +22,34 @@ declare -A flip
 while [ $toss -lt $MAX_PLAY ]
 do
 	#Generate Head/Tail
-	coinFlip=$(( $RANDOM %2 ))
+	coinFlipSinglet=$(( $RANDOM %2 ))
+	coinFlipDoublet=$(( $RANDOM %4 ))
 
-	#Check if it's Head or Tail
-	if [ $coinFlip -eq $HEAD ]; then
-		flip[$KEY]="${flip[$KEY]} H"
-		(( headCount++ ))
+	#Check if it's H/T for Singlet
+	if [ $coinFlipSinglet -eq 0 ]; then
+		flip[$KEY1]="${flip[$KEY1]} H"
+		(( singlet[0]++ ))
 	else
-		flip[$KEY]="${flip[$KEY]} T"
-		(( tailCount++ ))
+		flip[$KEY1]="${flip[$KEY1]} T"
+		(( singlet[1]++ ))
 	fi
+
+
+	#Check if it's HH/HT/TH/TT for Doublet
+	if [ $coinFlipDoublet -eq 0 ]; then
+		flip[$KEY2]="${flip[$KEY2]} HH"
+		(( doublet[0]++ ))
+	elif [ $coinFlipDoublet -eq 1 ]; then
+		flip[$KEY2]="${flip[$KEY2]} HT"
+		(( doublet[1]++ ))
+	elif [ $coinFlipDoublet -eq 2 ]; then
+		flip[$KEY2]="${flip[$KEY2]} TH"
+		(( doublet[2]++ ))
+	else
+		flip[$KEY2]="${flip[$KEY2]} TT"
+		(( doublet[3]++ ))
+	fi
+
 
 	(( toss++ ))
 
@@ -43,9 +63,26 @@ function percent() {
 }
 
 
-# Print Singlet combination stored in dictionary
-echo ${!flip[*]} ${flip[*]}
 
-# Print percentages
-echo "Head: $(percent $headCount) %"
-echo "Tail: $(percent $tailCount) %"
+# Function to display the outcomes
+function display(){
+
+	declare -a count=($1)
+	local arr=("$2")
+	declare -a com=($3)
+
+	# Print Singlet combination stored in dictionary
+	echo "Combination: ${arr[*]}"
+
+	# Print percentages
+	for i in ${!count[*]}
+	do
+		echo -n "${com[$i]}-$(percent $count[$i])%  "
+	done
+	echo ""
+}
+
+
+# Function call
+display "${singlet[*]}" "${flip[$KEY1]}" "${combSinlt[*]}"
+display "${doublet[*]}" "${flip[$KEY2]}" "${combDoblt[*]}"
